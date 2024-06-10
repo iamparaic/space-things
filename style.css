@@ -1,6 +1,6 @@
 /********** SITE WIDE CSS **********/
 body {
-    background-image: url(media/background.jpg);
+    background-image: url(media/background.png);
     background-size: cover;
 }
 
@@ -13,19 +13,17 @@ body {
 .flex-inner-container {
     display: flex;
     justify-content: space-between;
-}
-
-
+}   
 
 /********** NAV **********/
 #nav-logo {
-    height: 100px;
+    height: 50px;
     padding: 0 0 0 0;
 }
 
 #purple-button {
     padding: 12px 30px 12px 30px;
-    margin-top: 10px;
+    margin-top: 5px;
     font-size: 1em;
     font-family: "Space Grotesk", sans-serif;
     font-weight: 600;
