@@ -29,7 +29,7 @@ window.onload = function() {
             const asteroid = {
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                radius: Math.random() * 40 + 20, // Random size 
+                radius: Math.random () * 40 + 20, // Random size 
                 velocityX: Math.random() * 3 - 2, // Random speed 
                 velocityY: Math.random() * 3 - 2 
             };
@@ -119,13 +119,45 @@ function drawShip(x, y, angle) {
         missiles = missiles.filter(missile => missile.x >= 0 && missile.x <= canvas.width && missile.y >= 0 && missile.y <= canvas.height);
     }
 
-
-    // Function to draw the score
-    function drawScore() {
-        context.fillStyle = 'white';
-        context.font = '20px Arial';
-        context.fillText('Score: ' + score, 10, 30); // Adjust position as needed
+// Function to draw the score
+function drawScore() {
+    context.fillStyle = 'white';
+    context.font = '20px Arial';
+    context.fillText('Score: ' + score, 10, 30); // Adjust position as needed
 }
+
+// Function to check collisions between objects
+function checkCollisions() {
+    for (let i = 0; i < asteroids.length; i++) {
+        const asteroid = asteroids[i];
+        for (let j = 0; j < missiles.length; j++) {
+            const missile = missiles[j];
+            const dx = asteroid.x - missile.x;
+            const dy = asteroid.y - missile.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < asteroid.radius) {
+                // Collision detected
+                
+                // Increment score
+                score += 1;
+
+                if (asteroid.radius > 40) {
+                    // Split the asteroid into two smaller ones
+                    asteroids.splice(i, 1);
+                    createAsteroid();
+                    createAsteroid();
+                } else {
+                    // Remove the asteroid
+                    asteroids.splice(i, 1);
+                }
+                // Remove the missile
+                missiles.splice(j, 1);
+                break;
+            }
+        }
+    }
+}
+
 
     // Game loop
     function update() {
@@ -269,6 +301,13 @@ function update() {
 
     // Update asteroids
     updateAsteroids();
+
+    // Function to draw the score
+    function drawScore() {
+    context.fillStyle = 'white';
+    context.font = '20px Arial';
+    context.fillText('Score: ' + score, 10, 30); // Adjust position as needed
+}
 
     // Update missiles
     updateMissiles();
