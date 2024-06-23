@@ -2,12 +2,12 @@ window.onload = function() {
     const canvas = document.getElementById('gameCanvas');
     const context = canvas.getContext('2d');
 
-    // Set canvas dimensions
+    //********** Set canvas 
     canvas.width = 1000;
     canvas.height = 600;
     
 
-    // Game variables
+    //********** Game variables
     let score = 0;
     let ship = {
         x: canvas.width / 2,
@@ -23,7 +23,7 @@ window.onload = function() {
     let missiles = [];
     let asteroids = [];
 
-    // Function to create random asteroids
+    //********** Function to create random sized asteroids
     function createAsteroid() {
         if (asteroids.length < 4) { // Check if the number of asteroids is less than 5
             const asteroid = {
@@ -37,7 +37,7 @@ window.onload = function() {
         }
     }
 
-    // Function to draw asteroids
+    //********** draw asteroids
     function drawAsteroids() {
         context.fillStyle = '#f1d73b';
         for (let asteroid of asteroids) {
@@ -47,13 +47,13 @@ window.onload = function() {
         }
     }
 
-    // Function to update asteroids' positions
+    //********** Asteroids' positioning
     function updateAsteroids() {
         for (let asteroid of asteroids) {
             asteroid.x += asteroid.velocityX;
             asteroid.y += asteroid.velocityY;
 
-            // Wrap around the screen
+            //********** Make them wrap around the screen
             if (asteroid.x < -asteroid.radius) asteroid.x = canvas.width + asteroid.radius;
             if (asteroid.x > canvas.width + asteroid.radius) asteroid.x = -asteroid.radius;
             if (asteroid.y < -asteroid.radius) asteroid.y = canvas.height + asteroid.radius;
@@ -61,21 +61,21 @@ window.onload = function() {
         }
     }
 
-    // Functions to draw the ship
+    //********** Ship
 function drawShip(x, y, angle) {
-    context.fillStyle = '#499db4'; // Setting fill color to white
-    context.strokeStyle = 'white'; // Setting stroke color to white for the other borders
+    context.fillStyle = '#499db4'; //********** Setting fill color to white
+    context.strokeStyle = 'white'; //********** Setting stroke color to white for the other borders
     context.lineWidth = 5;
     context.beginPath();
-    context.moveTo( // Nose of the ship
+    context.moveTo( //********** Outline of the ship to help see orientation
         x + 4 / 3 * ship.radius * Math.cos(angle),
         y - 4 / 3 * ship.radius * Math.sin(angle)
     );
-    context.lineTo( // Rear left
+    context.lineTo( 
         x - ship.radius * (2 / 3 * Math.cos(angle) + Math.sin(angle)),
         y + ship.radius * (2 / 3 * Math.sin(angle) - Math.cos(angle))
     );
-    context.lineTo( // Rear right
+    context.lineTo( 
         x - ship.radius * (2 / 3 * Math.cos(angle) - Math.sin(angle)),
         y + ship.radius * (2 / 3 * Math.sin(angle) + Math.cos(angle))
     );
@@ -83,7 +83,6 @@ function drawShip(x, y, angle) {
     context.stroke();
     context.fill();
     
-    // Draw bottom border separately with #499db4 color
     context.strokeStyle = '#499db4'; // Setting stroke color to #499db4 for the bottom border
     context.beginPath();
     context.moveTo(
@@ -98,7 +97,7 @@ function drawShip(x, y, angle) {
 }
 
 
-    // Function to draw missiles
+    //********** Draw missiles
     function drawMissiles() {
         context.fillStyle = 'white';
         for (let missile of missiles) {
@@ -108,25 +107,24 @@ function drawShip(x, y, angle) {
         }
     }
 
-    // Function to update missiles' positions
     function updateMissiles() {
         for (let missile of missiles) {
             missile.x += missile.velocityX;
             missile.y += missile.velocityY;
         }
 
-        // Remove missiles that are out of the canvas
+        //********** Remove missiles that are out of canvas
         missiles = missiles.filter(missile => missile.x >= 0 && missile.x <= canvas.width && missile.y >= 0 && missile.y <= canvas.height);
     }
 
-// Function to draw the score
+//********** Function to draw the score
 function drawScore() {
     context.fillStyle = 'white';
     context.font = '20px Arial';
     context.fillText('Score: ' + score, 10, 30); // Adjust position as needed
 }
 
-// Function to check collisions between objects
+//********** Function to check collisions between objects
 function checkCollisions() {
     for (let i = 0; i < asteroids.length; i++) {
         const asteroid = asteroids[i];
@@ -136,18 +134,17 @@ function checkCollisions() {
             const dy = asteroid.y - missile.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             if (distance < asteroid.radius) {
-                // Collision detected
                 
-                // Increment score
+                //********** Increment score
                 score += 1;
 
                 if (asteroid.radius > 40) {
-                    // Split the asteroid into two smaller ones
+                    //********** Split the asteroid into two smaller ones
                     asteroids.splice(i, 1);
                     createAsteroid();
                     createAsteroid();
                 } else {
-                    // Remove the asteroid
+                    //********** Remove the asteroid
                     asteroids.splice(i, 1);
                 }
                 // Remove the missile
@@ -159,12 +156,12 @@ function checkCollisions() {
 }
 
 
-    // Game loop
+    //********** Game loop
     function update() {
-        // Rotate the ship
+        //********** Rotate the ship
         ship.angle += ship.rotation;
 
-        // Move the ship
+        //********** Move the ship
         if (ship.thrusting) {
             ship.thrust.x += 0.05 * Math.cos(ship.angle);
             ship.thrust.y -= 0.05 * Math.sin(ship.angle);
@@ -176,47 +173,45 @@ function checkCollisions() {
         ship.x += ship.thrust.x;
         ship.y += ship.thrust.y;
 
-        // Handle edge of the screen
+        //********** Handle edge of the screen
         if (ship.x < 0 - ship.radius) ship.x = canvas.width + ship.radius;
         if (ship.x > canvas.width + ship.radius) ship.x = 0 - ship.radius;
         if (ship.y < 0 - ship.radius) ship.y = canvas.height + ship.radius;
         if (ship.y > canvas.height + ship.radius) ship.y = 0 - ship.radius;
 
-        // Update asteroids
+        //********** Update asteroids & missiles etc
         updateAsteroids();
-
-        // Update missiles
         updateMissiles();
 
-        // Clear the canvas
+        //********** Clear the canvas
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw asteroids
+        //********** Draw asteroids
         drawAsteroids();
 
-        // Draw the ship
+        //********** Draw the ship
         drawShip(ship.x, ship.y, ship.angle);
 
-        // Draw missiles
+        //********** Draw missiles
         drawMissiles();
 
-        // Request the next frame
+        //********** Request the next frame
         requestAnimationFrame(update);
     }
 
-    // Keydown event to handle rotation, thrust, and firing missiles
+    //********** Keydown event to handle rotation, thrust, and firing missiles
     document.addEventListener('keydown', function(event) {
         switch(event.keyCode) {
-            case 37: // left arrow (rotate left)
+            case 37: //********** left arrow (rotate left)
                 ship.rotation = 0.1;
                 break;
-            case 39: // right arrow (rotate right)
+            case 39: //********** right arrow (rotate right)
                 ship.rotation = -0.1;
                 break;
-            case 38: // up arrow (thrust forward)
+            case 38: //********** up arrow (thrust forward)
                 ship.thrusting = true;
                 break;
-            case 32: // space bar (fire missile)
+            case 32: //********** space bar (fire missile)
                 const missile = {
                     x: ship.x,
                     y: ship.y,
@@ -228,25 +223,25 @@ function checkCollisions() {
         }
     });
 
-    // Keyup event to stop rotation and thrust
+    //********** Keyup event to stop rotation and thrust
     document.addEventListener('keyup', function(event) {
         switch(event.keyCode) {
-            case 37: // left arrow (stop rotating left)
-            case 39: // right arrow (stop rotating right)
+            case 37: //********** left arrow (stop rotating left)
+            case 39: //********** right arrow (stop rotating right)
                 ship.rotation = 0;
                 break;
-            case 38: // up arrow (stop thrusting)
+            case 38: //********** up arrow (stop thrusting)
                 ship.thrusting = false;
                 break;
         }
     });
 
-    // Create initial asteroids
+    //********** Create initial asteroids
     for (let i = 0; i < 10; i++) {
         createAsteroid();
     }
 
-    // Function to check collisions between objects
+    //********** Function to check collisions between objects
 function checkCollisions() {
     for (let i = 0; i < asteroids.length; i++) {
         const asteroid = asteroids[i];
@@ -256,17 +251,17 @@ function checkCollisions() {
             const dy = asteroid.y - missile.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             if (distance < asteroid.radius) {
-                // Collision detected
+                //********** Collision detected
                 if (asteroid.radius > 40) {
-                    // Split the asteroid into two smaller ones
+                    //********** Split the asteroid into two smaller ones
                     asteroids.splice(i, 1);
                     createAsteroid();
                     createAsteroid();
                 } else {
-                    // Remove the asteroid
+                    //********** Remove the asteroid
                     asteroids.splice(i, 1);
                 }
-                // Remove the missile
+                //********** Remove the missile
                 missiles.splice(j, 1);
                 break;
             }
@@ -276,12 +271,9 @@ function checkCollisions() {
 
 
 
-// Call checkCollisions() inside the update() function before drawing the objects
 function update() {
-    // Rotate the ship
     ship.angle += ship.rotation;
 
-    // Move the ship
     if (ship.thrusting) {
         ship.thrust.x += 0.05 * Math.cos(ship.angle);
         ship.thrust.y -= 0.05 * Math.sin(ship.angle);
